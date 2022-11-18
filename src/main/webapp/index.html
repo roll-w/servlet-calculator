@@ -1,0 +1,159 @@
+<!--
+  ~ Copyright (C) 2022 RollW
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+
+    <title>Calculator</title>
+</head>
+<body>
+<main>
+    <div class="container mt-5 text-center w-50">
+        <h1>Calculator</h1>
+        <br>
+        <div class="alert alert-secondary text-start rounded-3">
+            <h4>INFO</h4>
+            <p>"?" is the root operation.</p>
+            <p>"%" is the remainder operation.</p>
+        </div>
+        <div>
+            <div class="input-group">
+                <div class="form-floating">
+                    <input name="expression" type="text" class="form-control" id="expression-input"
+                           placeholder="Expression">
+                    <label for="expression-input">Expression</label>
+                </div>
+                <button type="button" id="expression-submit" class="btn btn-outline-primary">Confirm</button>
+                <button type="reset" id="expression-reset" class="btn btn-outline-secondary">Reset</button>
+            </div>
+        </div>
+        <hr>
+        <div class="alert alert-success text-start rounded-3">
+            <h5>Result</h5>
+            <p id="result"></p>
+        </div>
+        <div class="alert alert-primary text-start rounded-3">
+            <h5>Calculation Process</h5>
+            <p id="result-process"></p>
+        </div>
+        <div class="alert alert-primary text-start rounded-3">
+            <h5>Parsing Process</h5>
+            <p id="parse-process"></p>
+        </div>
+
+    </div>
+    <script>
+        const submitButton = document.getElementById("expression-submit")
+        const resetButton = document.getElementById("expression-reset")
+        const expressionInput = document.getElementById("expression-input")
+        const resultOut = document.getElementById("result")
+        const resultProcessOut = document.getElementById("result-process")
+        const parseProcessOut = document.getElementById("parse-process")
+
+        submitButton.addEventListener("click", requestEval)
+        resetButton.addEventListener("click", function () {
+            clearAll()
+            expressionInput.value = ""
+        })
+
+        function requestEval() {
+            let request = new XMLHttpRequest()
+            request.onreadystatechange = function () {
+                if (request.readyState !== 4) {
+                    return;
+                }
+                if (request.status !== 200) {
+                    clearAll()
+                    resultOut.innerHTML = `Fail! Status：${request.status}`
+                    return
+                }
+                let json = JSON.parse(request.responseText)
+                console.log(json)
+                if (json.success !== undefined) {
+                    clearAll()
+                    resultOut.innerHTML = `Fail! ${json.message}`
+                    return
+                }
+                resultOut.innerHTML = `${json.result}`
+                let steps = json["steps"]
+                let processInnerHtml = "<ul class=\"list-group\">"
+                for (let i in steps) {
+                    let step = steps[i]
+                    processInnerHtml += processStep(step)
+                }
+                resultProcessOut.innerHTML = processInnerHtml + "</ul>"
+
+                let parseInnerHtml = ""
+                let stages = json["stages"]
+                for (let i in stages) {
+                    let stage = stages[i]
+                    parseInnerHtml += processStage(stage)
+                }
+                parseProcessOut.innerHTML = parseInnerHtml
+            }
+            request.open("POST", "/api/eval", true)
+            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+            request.send(`expression=${encodeURIComponent(expressionInput.value)}`)
+
+        }
+
+        function processStep(step) {
+            return `<li class="list-group-item"> TYPE=${step.operator}; prev=${step.prev}; next=${step.next}; result=${step["res"]} </li>`
+        }
+
+        function processStage(stage) {
+            let html = `<br><h5>${stage["stage"]}</h5>`
+            let blocks = stage["blocks"]
+            let parseInnerHtml = "<ul class=\"list-group\">"
+            for (let i in blocks) {
+                let block = blocks[i]
+                parseInnerHtml += processBlock(block)
+            }
+            return html + parseInnerHtml + "</ul>"
+        }
+
+        function processBlock(block) {
+            return `<li class="list-group-item">[${block.start}-${block.end}]${block.type} "${block.expression}"`
+        }
+
+        function clearAll() {
+            clearProcess()
+            clearResult()
+            clearParseProcess()
+        }
+
+        function clearProcess() {
+            resultProcessOut.innerHTML = ""
+        }
+
+        function clearResult() {
+            resultOut.innerHTML = ""
+        }
+
+        function clearParseProcess() {
+            parseProcessOut.innerHTML = ""
+        }
+    </script>
+</main>
+</body>
+</html>
