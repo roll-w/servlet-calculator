@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-package pers.rollw.calculator.core;
+package tech.rollw.calculator.core;
+
+import java.util.Arrays;
 
 /**
  * @author RollW
  */
-public enum Type {
-    // ?
-    PREFIX,
-    // + - * /
-    SUFFIX,
+public enum Level {
+    NORMAL,
+    MIDDLE,
+    HIGH;
+
+    public static Iterable<Level> iterator() {
+        return Arrays.asList(HIGH, MIDDLE, NORMAL);
+    }
 }

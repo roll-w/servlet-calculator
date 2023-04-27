@@ -14,29 +14,14 @@
  * limitations under the License.
  */
 
-package pers.rollw.calculator.core;
+package tech.rollw.calculator.core;
 
 /**
  * @author RollW
  */
-public class SquareRootOperator implements Operator {
-    @Override
-    public Type type() {
-        return Type.PREFIX;
-    }
-
-    @Override
-    public String token() {
-        return "?";
-    }
-
-    @Override
-    public double operate(double prev, double next) {
-        return Math.sqrt(next);
-    }
-
-    @Override
-    public Level priority() {
-        return Level.HIGH;
-    }
+public enum Type {
+    // ?
+    PREFIX,
+    // + - * /
+    SUFFIX,
 }

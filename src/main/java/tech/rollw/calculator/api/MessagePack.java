@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package pers.rollw.calculator.core;
+package tech.rollw.calculator.api;
 
 /**
  * @author RollW
  */
-public abstract class BaseSuffixOperator implements Operator {
-    @Override
-    public Type type() {
-        return Type.SUFFIX;
+public class MessagePack {
+    public final boolean success;
+    public final String message;
+
+    public MessagePack(boolean success, String message) {
+        this.success = success;
+        this.message = message;
     }
 }

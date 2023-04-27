@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package pers.rollw.calculator.api;
+package tech.rollw.calculator.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import pers.rollw.calculator.core.CalculatorEvaluator;
-import pers.rollw.calculator.core.CalculatorException;
+import tech.rollw.calculator.core.CalculatorEvaluator;
+import tech.rollw.calculator.core.CalculatorException;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

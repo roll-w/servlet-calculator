@@ -14,17 +14,32 @@
  * limitations under the License.
  */
 
-package pers.rollw.calculator.api;
+package tech.rollw.calculator.core;
 
 /**
  * @author RollW
  */
-public class MessagePack {
-    public final boolean success;
-    public final String message;
+public class DivideOperator extends BaseSuffixOperator implements Operator {
+    @Override
+    public String token() {
+        return "/";
+    }
 
-    public MessagePack(boolean success, String message) {
-        this.success = success;
-        this.message = message;
+    @Override
+    public double operate(double prev, double next) {
+        if (prev == INVALID) {
+            return next;
+        }
+        if (next == 0) {
+            throw new CalculatorException(
+                    CalculatorException.ErrorInfo.ILLEGAL_OPERATOR,
+                    "Cannot divide zero");
+        }
+        return prev / next;
+    }
+
+    @Override
+    public Level priority() {
+        return Level.MIDDLE;
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pers.rollw.calculator.core;
+package tech.rollw.calculator.core;
 
 /**
  * @author RollW

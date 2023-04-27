@@ -14,27 +14,33 @@
  * limitations under the License.
  */
 
-package pers.rollw.calculator.core;
+package tech.rollw.calculator.core;
 
 /**
  * @author RollW
  */
-public class MinusOperator extends BaseSuffixOperator {
+public class PlusOperator extends BaseSuffixOperator implements Operator {
+    @Override
+    public Type type() {
+        return Type.SUFFIX;
+    }
+
     @Override
     public String token() {
-        return "-";
+        return "+";
     }
 
     @Override
     public double operate(double prev, double next) {
         if (prev == INVALID) {
-            return -next;
+            return next;
         }
-        return prev - next;
+        return prev + next;
     }
 
     @Override
     public Level priority() {
         return Level.NORMAL;
     }
+
 }

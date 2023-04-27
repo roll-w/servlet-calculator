@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package pers.rollw.calculator.core;
-
-import java.util.Arrays;
+package tech.rollw.calculator.core;
 
 /**
  * @author RollW
  */
-public enum Level {
-    NORMAL,
-    MIDDLE,
-    HIGH;
+public interface Operator {
+    double INVALID = Double.MIN_VALUE;
 
-    public static Iterable<Level> iterator() {
-        return Arrays.asList(HIGH, MIDDLE, NORMAL);
-    }
+    Type type();
+
+    String token();
+
+    double operate(double prev, double next);
+
+    Level priority();
 }

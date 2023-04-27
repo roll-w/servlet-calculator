@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package pers.rollw.calculator.core;
+package tech.rollw.calculator.core;
 
 /**
  * @author RollW
  */
-public class DivideOperator extends BaseSuffixOperator implements Operator {
+public class MultiplyOperator extends BaseSuffixOperator implements Operator {
     @Override
     public String token() {
-        return "/";
+        return "*";
     }
 
     @Override
@@ -30,12 +30,7 @@ public class DivideOperator extends BaseSuffixOperator implements Operator {
         if (prev == INVALID) {
             return next;
         }
-        if (next == 0) {
-            throw new CalculatorException(
-                    CalculatorException.ErrorInfo.ILLEGAL_OPERATOR,
-                    "Cannot divide zero");
-        }
-        return prev / next;
+        return prev * next;
     }
 
     @Override

@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package pers.rollw.calculator.core;
+package tech.rollw.calculator.core;
 
 /**
  * @author RollW
  */
-public interface Operator {
-    double INVALID = Double.MIN_VALUE;
-
-    Type type();
-
-    String token();
-
-    double operate(double prev, double next);
-
-    Level priority();
+public abstract class BaseSuffixOperator implements Operator {
+    @Override
+    public Type type() {
+        return Type.SUFFIX;
+    }
 }
